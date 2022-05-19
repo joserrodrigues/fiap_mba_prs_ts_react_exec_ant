@@ -1,0 +1,16 @@
+.containerDiv{
+    text-align: center;
+}
+
+.textDiv{
+    text-align: center;
+    font-size: 30px;
+    margin-top: 15px;
+}
+.buttonClass{
+    background-color: lightblue;
+    width: 200px;
+    height: 50px;
+    font-size: 12px;
+    margin-top: 15px;
+}
