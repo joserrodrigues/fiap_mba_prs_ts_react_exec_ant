@@ -1,31 +1,33 @@
-import React, { Component } from 'react'
-import HomeView from './HomeView'
+import React, { useRef, useState } from 'react';
+import HomeView from './HomeView';
 
-type State = {
-      count: number;
-}
+const HomeController = () => {
 
-export default class HomeController extends Component<any, State> {
-    constructor(props:any) {
-        super(props)
-        this.state = { 
-            count: 0
-        }
+    const [count, setCount] = useState<number>(0);
+    const [statusPlay, setStatusPlay] = useState<number>(0);
+    const timer = useRef<NodeJS.Timeout | null>(null);
+
+    const onStart = () => {        
+        timer.current = setInterval(() => {
+            setStatusPlay(1);
+            setCount((count) => count + 1);
+        }, 1000);
     }
 
-    changeInfo = () => {
-      
-      this.setState({
-        count: this.state.count + 1
-      })
+    const onPause = () => {        
+        setStatusPlay(2);
+        clearInterval(timer.current as NodeJS.Timeout);
     }
-  
 
-  render() {
-    return (
-      <HomeView
-        changeInfo={this.changeInfo}
-        info={this.state.count} />
-    )
-  }
+    const onStop = () => {
+        setCount(0);
+        setStatusPlay(0);
+        clearInterval(timer.current as NodeJS.Timeout);
+    }
+
+    return <HomeView count={count} statusPlay={statusPlay}
+                     onStart={onStart} onPause={onPause} onStop={onStop} />;
 }
+
+
+export default HomeController;
