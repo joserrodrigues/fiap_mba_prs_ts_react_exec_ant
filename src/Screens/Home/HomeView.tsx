@@ -1,43 +1,58 @@
 import { FC, ReactElement } from 'react'
-import { Button, ButtonProps, Grid, Stack } from '@mui/material'
+import { Typography, CircularProgress, Grid, GridProps } from '@mui/material'
+import {AllPersons} from '../../Models/Person'
+import CustomCards from '../../Components/Card/CustomCards'
 import './Home.css'
 
-type IProps = {
-    count: number,
-    statusPlay: number,
-    onStart: Function,
-    onPause: Function,
-    onStop: Function
+interface IProps {
+  person: AllPersons | null,
+  loading: boolean,
+  error: string
 }
 
-const HomeView:FC<IProps> = ({count, statusPlay, onStart, onPause, onStop }) => {
 
-    let buttons:ReactElement<ButtonProps>[] = [];
-
-    console.log(statusPlay);
-    if (statusPlay === 0){
-        buttons.push(<Button key={1} variant="outlined" color="error" onClick={() => onStart()}>Iniciar</Button>);
-    } else if (statusPlay === 1){
-        buttons.push(<Button key={2} variant="outlined" color="error" onClick={() => onPause()}> Pausar</Button>);
-        buttons.push(<Button key={3} variant="outlined" color="error" onClick={() => onStop()}> Parar</Button>);  
-    } else {
-        buttons.push(<Button key={1} variant="outlined" color="error" onClick={() => onStart()} >Despausar</Button>);
-        buttons.push(<Button key={2} variant="outlined" color="error" onClick={() => onStop()} >Parar</Button>);        
+const HomeView:FC<IProps> = ({ person, loading, error }) => {
+    
+    let arrayCards:ReactElement<GridProps>[] = [];
+    if (person) {
+        person.persons.forEach(element => {
+            arrayCards.push(
+                <Grid item xs={12} md={6} lg={3} key={element._id} >
+                    <CustomCards person={element} />
+                </Grid>);
+        });
     }
+
+    let info = null;
+    if (loading) {
+        info = (
+            <div className='infoClass'>
+                <CircularProgress />
+            </div>
+        )
+    } else if (error !== "") {
+        info = (
+            <div className='infoClass'>
+                <Typography gutterBottom variant="h5" component="div">
+                    {error}
+                </Typography>
+            </div>
+        )
+    } else {
+        info = (
+            <Grid
+                container
+                spacing={5}>
+                {arrayCards}
+            </Grid>
+        )
+    }
+
     return (
-        <Grid container spacing={2} direction="column"
-            justifyContent="center"
-            alignItems="center"
-            className='container'>
-            <Grid item>
-                <div className='text'>Count {count}</div>
-            </Grid>
-            <Grid item xs>
-                <Stack direction="row" spacing={10}>
-                    {buttons}
-                </Stack>
-            </Grid>
-        </Grid>
+        <>
+            {info}
+        </>
+
     );
 }
 

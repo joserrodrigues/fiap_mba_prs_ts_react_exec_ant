@@ -1,32 +1,17 @@
-import React, { useRef, useState } from 'react';
+import { useEffect } from 'react';
+import useAPI from '../../Services/APIs/Common/useAPI';
+import persons from '../../Services/APIs/Persons/Persons';
 import HomeView from './HomeView';
+
 
 const HomeController = () => {
 
-    const [count, setCount] = useState<number>(0);
-    const [statusPlay, setStatusPlay] = useState<number>(0);
-    const timer = useRef<NodeJS.Timeout | null>(null);
+    const getPersonsGetAPI = useAPI(persons.getPersons);
+    useEffect(() => {
+        getPersonsGetAPI.request();
+    }, []);
 
-    const onStart = () => {        
-        timer.current = setInterval(() => {
-            setStatusPlay(1);
-            setCount((count) => count + 1);
-        }, 1000);
-    }
-
-    const onPause = () => {        
-        setStatusPlay(2);
-        clearInterval(timer.current as NodeJS.Timeout);
-    }
-
-    const onStop = () => {
-        setCount(0);
-        setStatusPlay(0);
-        clearInterval(timer.current as NodeJS.Timeout);
-    }
-
-    return <HomeView count={count} statusPlay={statusPlay}
-                     onStart={onStart} onPause={onPause} onStop={onStop} />;
+    return <HomeView person={getPersonsGetAPI.data} loading={getPersonsGetAPI.loading} error={getPersonsGetAPI.error} />
 }
 
 
