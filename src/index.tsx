@@ -6,6 +6,7 @@ import { BrowserRouter } from "react-router-dom";
 import Router from "./Routes/Routes";
 import { ThemeProvider } from "@mui/material";
 import MuiTheme from "./Services/Themes/MuiTheme";
+import UserInfoContextProvider from "./Store/UserInfo/UserInfoProvider";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -15,7 +16,9 @@ root.render(
   <React.StrictMode>
     <ThemeProvider theme={MuiTheme}>
       <BrowserRouter>
-        <Router />
+        <UserInfoContextProvider>
+          <Router />
+        </UserInfoContextProvider>
       </BrowserRouter>
     </ThemeProvider>
   </React.StrictMode>
